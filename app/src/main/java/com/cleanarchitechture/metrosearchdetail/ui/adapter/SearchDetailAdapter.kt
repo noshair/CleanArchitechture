@@ -1,13 +1,13 @@
-package com.appfactorycoding.section.search_detail.ui.adapter
+package com.cleanarchitechture.metrosearchdetail.ui.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.appfactorycoding.R
-import com.appfactorycoding.databinding.SearchDetailItemBinding
 import com.bumptech.glide.Glide
+import com.cleanarchitechture.R
+import com.cleanarchitechture.databinding.SearchDetailItemBinding
 
 class SearchDetailAdapter(val context: Context) :
     RecyclerView.Adapter<SearchDetailAdapter.SearchViewHolder>() {
@@ -16,12 +16,12 @@ class SearchDetailAdapter(val context: Context) :
     private lateinit var recyclerViewList: List<String>
 
 
-    inner class SearchViewHolder(var searchDetailItemBinding: SearchDetailItemBinding) :
+    inner class SearchViewHolder(private var searchDetailItemBinding: SearchDetailItemBinding) :
         RecyclerView.ViewHolder(searchDetailItemBinding.root) {
         fun bind(item: String) {
             Glide.with(context)
                 .load(item)
-                .placeholder(R.drawable.loadingif)
+                .placeholder(R.drawable.ic_launcher_foreground)
                 .into(searchDetailItemBinding.additionalImg)
         }
     }
@@ -30,7 +30,7 @@ class SearchDetailAdapter(val context: Context) :
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): SearchDetailAdapter.SearchViewHolder {
+    ): SearchViewHolder {
         val view: SearchDetailItemBinding =
             DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
@@ -42,7 +42,7 @@ class SearchDetailAdapter(val context: Context) :
     }
 
 
-    override fun onBindViewHolder(holder: SearchDetailAdapter.SearchViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
         holder.bind(recyclerViewList[position])
     }
 

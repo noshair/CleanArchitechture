@@ -35,7 +35,7 @@ constructor(private val getAllidsUseCase: GetAllIdsUseCase) : ViewModel() {
                 is Resource.OnFailure -> {
                     searchMutableList.update { SearchUi(false) }
                     searchMutableList.update {
-                        SearchUi(error = item.error?: "unexpected error accord")
+                        SearchUi(error = item.error ?: "unexpected error occurred")
                     }
                 }
                 else ->{}

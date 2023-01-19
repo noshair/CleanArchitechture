@@ -1,13 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".metrosearchdetail.ui.MetroSearchDetailFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
+    <data>
+
+        <variable
+            name="searchItem"
+            type="com.cleanarchitechture.metrosearchdetail.ui.adapter.SearchDetailAdapter" />
+
+        <variable
+            name="dataItem"
+            type="com.appfactorycoding.service.model.search_detail.SearchDetailResponse" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_margin="20dp"
+        android:background="@color/cardview_dark_background"
+        android:orientation="vertical"
+        tools:context=".section.search_detail.ui.SearchDetailFragment">
 
-</FrameLayout>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/primaryImage"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_margin="5dp"
+            android:layout_marginTop="16dp"
+            android:layout_weight="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerDetailList"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+
+            android:orientation="horizontal"
+            app:layoutManager="LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/primaryImage" />
+
+
+        <TextView
+            android:id="@+id/objectName"
+            _constraintBottom_toTopOf="@+id/recyclerDetailList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:fontFamily="@font/open_sans_semibold"
+            android:padding="10dp"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recyclerDetailList" />
+
+        <TextView
+            android:id="@+id/department"
+            _constraintBottom_toTopOf="@+id/primaryImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:fontFamily="@font/open_sans_semibold"
+            android:padding="10dp"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/objectName" />
+
+        <TextView
+            android:id="@+id/title"
+            _constraintBottom_toTopOf="@+id/primaryImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:fontFamily="@font/open_sans_bold"
+            android:padding="5dp"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/department" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

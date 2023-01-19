@@ -3,7 +3,8 @@ package com.cleanarchitechture.di
 import com.cleanarchitechture.BuildConfig.API_BASE_URL
 import com.cleanarchitechture.metrosearch.data.repository.MetroSearchRepositoryImp
 import com.cleanarchitechture.metrosearch.domain.repository.MetroSearchRepository
-import com.cleanarchitechture.metrosearch.ui.MetroSearchViewModel
+import com.cleanarchitechture.metrosearchdetail.data.remote.MetroSearchDetailRepositoryImp
+import com.cleanarchitechture.metrosearchdetail.domain.repository.MetroSearchDetailRepository
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.Module
 import dagger.Provides
@@ -50,13 +51,20 @@ class ApiServiceDataSource {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
+
     @Provides
     @Singleton
     fun apiServiceProvider(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
 
     @Singleton
     @Provides
-    fun provideSearchRepository(apiService: ApiService) : MetroSearchRepository {
+    fun provideSearchRepository(apiService: ApiService): MetroSearchRepository {
         return MetroSearchRepositoryImp(apiService)
     }
-   }
+
+    @Singleton
+    @Provides
+    fun provideSearchDetailRepository(apiService: ApiService): MetroSearchDetailRepository {
+        return MetroSearchDetailRepositoryImp(apiService)
+    }
+}

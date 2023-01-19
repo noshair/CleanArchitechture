@@ -1,5 +1,12 @@
 <resources>
     <string name="app_name">CleanArchitecture</string>
     <string name="hello_blank_fragment">Hello Metro Search</string>
-    <string name="objectId">ObjectId %1</string>
+    <string name="search">Search</string>
+    <string name="search_hint">Please enter the category</string>
+    <string name="please_enter_the_category_in_search">Please Enter the Category In Search</string>
+    <string name="title">Title : %1$s</string>
+    <string name="department">"Department : %1$s"</string>
+    <string name="objectName">ObjectName : %1$s</string>
+    <string name="artistDisplayName">ArtistDisplayName : %1$s</string>
+    <string name="objectId">"ObjectId :  %1$s"</string>
 </resources>
