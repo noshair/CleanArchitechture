@@ -2,35 +2,53 @@ package com.cleanarchitechture.metrosearchdetail.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.appfactorycoding.service.model.search_detail.SearchDetailResponse
 import com.cleanarchitechture.extension.Resource
-import com.cleanarchitechture.metrosearchdetail.domain.repository.MetroSearchDetailRepository
+import com.cleanarchitechture.metrosearchdetail.domain.model.DetailUiState
+import com.cleanarchitechture.metrosearchdetail.domain.use_case.GetSelectedIItemUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MetroSearchDetailViewModel
 @Inject constructor
-    (private val metroSearchDetailRepository: MetroSearchDetailRepository) : ViewModel() {
-    private val searchDetailMutable =
-        MutableStateFlow<Resource<SearchDetailResponse>>(Resource.OnNothing())
+    (private val getSelectedIItemUseCase: GetSelectedIItemUseCase) : ViewModel() {
+    private val searchDetailMutable = MutableStateFlow(DetailUiState(isLoading = false))
 
-    val searchDetailItem: StateFlow<Resource<SearchDetailResponse>>
-        get() = searchDetailMutable
+    val searchDetailItem = searchDetailMutable.asStateFlow()
 
+    //work  on
     fun getSelectedItem(id: Int) {
         viewModelScope.launch {
-            searchDetailMutable.value = Resource.OnLoading()
-            metroSearchDetailRepository.getSelectedGalleryItem(id)
-                .catch { e ->
-                    searchDetailMutable.value = Resource.OnFailure(null, e.message)
-                }.collect {
-                    searchDetailMutable.value = Resource.OnSuccess(it)
+            getSelectedIItemUseCase(id).onEach { item ->
+                when (item) {
+                    is Resource.OnLoading -> {
+                        searchDetailMutable.update {
+                            DetailUiState(isLoading = true, null)
+                        }
+                    }
+                    is Resource.OnSuccess -> {
+                        searchDetailMutable.update { DetailUiState(isLoading = false) }
+                        searchDetailMutable.update {
+                            DetailUiState(ItemList = item.data)
+                        }
+                    }
+                    is Resource.OnFailure -> {
+                        searchDetailMutable.update { DetailUiState(isLoading = false) }
+                        searchDetailMutable.update {
+                            DetailUiState(
+                                error = item.error ?: "unexpected error occurred",
+                                isLoading = false
+                            )
+                        }
+                    }
+                    else -> {}
                 }
+            }
         }
     }
 }

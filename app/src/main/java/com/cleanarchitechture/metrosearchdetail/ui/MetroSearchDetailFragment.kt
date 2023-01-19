@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.cleanarchitechture.R
 import com.cleanarchitechture.databinding.FragmentMetroSearchDetailBinding
-import com.cleanarchitechture.extension.Resource
 import com.cleanarchitechture.metrosearchdetail.ui.adapter.SearchDetailAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -36,7 +35,7 @@ class MetroSearchDetailFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_metro_search_detail, container, false
         )
@@ -48,42 +47,28 @@ class MetroSearchDetailFragment : Fragment() {
         lifecycleScope.launchWhenStarted {
             searchViewModel.searchDetailItem.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .collect {
-                    when (it) {
-                        is Resource.OnFailure -> {
-                            if (it.error != null) {
-                                Toast.makeText(context, it.error, Toast.LENGTH_LONG).show()
-                            }
-                        }
-                        is Resource.OnSuccess -> {
-                            if (it.data != null) {
-                                if (it.data.primaryImage != "")
-                                    Glide.with(this@MetroSearchDetailFragment)
-                                        .load(it.data.primaryImage)
-                                        .placeholder(R.drawable.ic_launcher_foreground)
-                                        .into(binding.primaryImage)
-                                else {
-                                    binding.primaryImage.setImageResource(R.drawable.ic_launcher_foreground)
-                                }
+                    if (it.isLoading) {
+                        Toast.makeText(context, "true", Toast.LENGTH_LONG).show()
 
-                                binding.title.text =
-                                    context?.resources?.getString(R.string.title, it.data.title)
-                                        ?: ""
-                                binding.objectName.text = context?.resources?.getString(
-                                    R.string.objectName,
-                                    it.data.objectName
-                                ) ?: ""
-                                binding.department.text = context?.resources?.getString(
-                                    R.string.department,
-                                    it.data.department
-                                ) ?: ""
-                                if (it.data.additionalImages.isNotEmpty()) {
-                                    factory?.update(it.data.additionalImages)
-                                }
-                            }
-                        }
-                        is Resource.OnLoading -> {
-                        }
-                        else -> {}
+                    } else if (it.error.isNotEmpty()) {
+                        Toast.makeText(context, it.error, Toast.LENGTH_LONG).show()
+                    } else if (it.ItemList != null) {
+                        Glide.with(this@MetroSearchDetailFragment)
+                            .load(it.ItemList.primaryImage)
+                            .placeholder(R.drawable.ic_launcher_foreground)
+                            .into(binding.primaryImage)
+                        binding.title.text =
+                            context?.resources?.getString(R.string.title, it.ItemList.title)
+                                ?: ""
+                        binding.objectName.text = context?.resources?.getString(
+                            R.string.objectName,
+                            it.ItemList.objectName
+                        ) ?: ""
+                        binding.department.text = context?.resources?.getString(
+                            R.string.department,
+                            it.ItemList.department
+                        ) ?: ""
+                        factory?.update(it.ItemList.additionalImages)
                     }
                 }
         }
