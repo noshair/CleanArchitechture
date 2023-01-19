@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">CleanArchitecture</string>
+    <string name="hello_blank_fragment">Hello Metro Search</string>
+    <string name="objectId">ObjectId %1</string>
+</resources>

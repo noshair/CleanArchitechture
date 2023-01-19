@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/metroSearchFragment">
+    <fragment
+        android:id="@+id/metroSearchFragment"
+        android:name="com.cleanarchitechture.metrosearch.ui.MetroSearchFragment"
+        android:label="fragment_metro_search"
+        tools:layout="@layout/fragment_metro_search" >
+        <action
+            android:id="@+id/action_metroSearchFragment_to_metroSearchDetailFragment"
+            app:destination="@id/metroSearchDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/metroSearchDetailFragment"
+        android:name="com.cleanarchitechture.metrosearchdetail.ui.MetroSearchDetailFragment"
+        android:label="fragment_metro_search_detail"
+        tools:layout="@layout/fragment_metro_search_detail" />
+</navigation>
