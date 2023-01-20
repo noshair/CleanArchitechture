@@ -45,10 +45,12 @@ class MetroSearchFragment : Fragment() ,SearchAdapter.SearchItemClickListener  {
             searchViewModel.searchList.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .collect {
                     if (it.isLoading && it.coinList.isEmpty()) {
-                        Toast.makeText(context, "true", Toast.LENGTH_LONG).show()
+                        searchBinding.progressBar.visibility = View.VISIBLE
                     } else if (!it.error.isNullOrBlank()) {
+                        searchBinding.progressBar.visibility = View.GONE
                         Toast.makeText(context, it.error, Toast.LENGTH_LONG).show()
                     } else if (it.coinList.isNotEmpty()) {
+                        searchBinding.progressBar.visibility = View.GONE
                         factory?.update(it.coinList)
                     }
                 }

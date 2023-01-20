@@ -48,11 +48,12 @@ class MetroSearchDetailFragment : Fragment() {
             searchViewModel.searchDetailItem.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .collect {
                     if (it.isLoading) {
-                        Toast.makeText(context, "true", Toast.LENGTH_LONG).show()
-
+                        binding.progressBar.visibility = View.VISIBLE
                     } else if (it.error.isNotEmpty()) {
+                        binding.progressBar.visibility = View.GONE
                         Toast.makeText(context, it.error, Toast.LENGTH_LONG).show()
                     } else if (it.ItemList != null) {
+                        binding.progressBar.visibility = View.GONE
                         Glide.with(this@MetroSearchDetailFragment)
                             .load(it.ItemList.primaryImage)
                             .placeholder(R.drawable.ic_launcher_foreground)
