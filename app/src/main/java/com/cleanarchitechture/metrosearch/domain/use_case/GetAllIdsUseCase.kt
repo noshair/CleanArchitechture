@@ -8,10 +8,10 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class GetAllIdsUseCase @Inject constructor(private val metroSearchRepository: MetroSearchRepository) {
+class GetAllIdsUseCase @Inject
+constructor(private val metroSearchRepository: MetroSearchRepository) {
 
     operator fun invoke(searchItem: String): Flow<Resource<SearchResponse>> = flow {
-
         emit(Resource.OnLoading())
         metroSearchRepository.getSearchData(searchItem).catch { error ->
             emit(Resource.OnFailure(null, error = error.message))

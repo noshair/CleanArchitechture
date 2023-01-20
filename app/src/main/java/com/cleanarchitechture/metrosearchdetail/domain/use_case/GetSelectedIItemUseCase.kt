@@ -9,10 +9,10 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class GetSelectedIItemUseCase @Inject constructor(private val metroSearchDetailRepository: MetroSearchDetailRepository) {
+class GetSelectedIItemUseCase
+@Inject constructor(private val metroSearchDetailRepository: MetroSearchDetailRepository) {
 
     operator fun invoke(searchItem: Int): Flow<Resource<OwnSearchDetail>> = flow {
-
         emit(Resource.OnLoading())
         metroSearchDetailRepository.getSelectedGalleryItem(searchItem)
             .map {
