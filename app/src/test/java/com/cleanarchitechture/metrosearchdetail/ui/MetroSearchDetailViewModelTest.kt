@@ -25,6 +25,7 @@ import org.mockito.MockitoAnnotations
 class MetroSearchDetailViewModelTest {
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
+
     private lateinit var viewModel: MetroSearchDetailViewModel
 
     @Mock
@@ -63,8 +64,6 @@ class MetroSearchDetailViewModelTest {
             )
             viewModel.getSelectedItem(38153)
             testDispatcher.scheduler.advanceUntilIdle()
-
-            viewModel.searchDetailItem
             viewModel.searchDetailItem.test {
                 val items = awaitItem()
                 assertEquals("Figure", items.ItemList?.objectName ?: "")
