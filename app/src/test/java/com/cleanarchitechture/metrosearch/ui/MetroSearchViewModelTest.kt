@@ -1,0 +1,3 @@
+package com.cleanarchitechture.metrosearch.ui
+
+class MetroSearchViewModelTest

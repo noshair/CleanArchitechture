@@ -36,7 +36,7 @@ constructor(private val getAllidsUseCase: GetAllIdsUseCase) : ViewModel() {
                         SearchUi(error = item.error ?: "unexpected error occurred")
                     }
                 }
-                else ->{}
+                else -> {}
             }
         }.launchIn(viewModelScope)
     }
