@@ -1,9 +1,8 @@
 package com.cleanarchitechture.metrosearch.ui
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
@@ -20,8 +19,9 @@ import com.cleanarchitechture.databinding.FragmentMetroSearchBinding
 import com.cleanarchitechture.metrosearch.ui.adapter.SearchAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
+
 @AndroidEntryPoint
-class MetroSearchFragment : Fragment() ,SearchAdapter.SearchItemClickListener  {
+class MetroSearchFragment : Fragment(), SearchAdapter.SearchItemClickListener {
     private lateinit var searchBinding: FragmentMetroSearchBinding
     private var factory: SearchAdapter? = null
     private val searchViewModel: MetroSearchViewModel by lazy {
@@ -40,22 +40,52 @@ class MetroSearchFragment : Fragment() ,SearchAdapter.SearchItemClickListener  {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initRecyclerview()
+        setHasOptionsMenu(true)
         super.onViewCreated(view, savedInstanceState)
         lifecycleScope.launchWhenStarted {
             searchViewModel.searchList.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .collect {
                     if (it.isLoading && it.coinList.isEmpty()) {
                         searchBinding.progressBar.visibility = View.VISIBLE
-                    } else if (!it.error.isNullOrBlank()) {
+                        searchBinding.hint.visibility = View.GONE
+                        searchBinding.recyclerList.visibility = View.GONE
+                    } else if (it.error.isNotBlank()) {
                         searchBinding.progressBar.visibility = View.GONE
+                        searchBinding.recyclerList.visibility = View.GONE
+                        searchBinding.hint.visibility = View.GONE
                         Toast.makeText(context, it.error, Toast.LENGTH_LONG).show()
                     } else if (it.coinList.isNotEmpty()) {
+                        searchBinding.recyclerList.visibility = View.VISIBLE
                         searchBinding.progressBar.visibility = View.GONE
+                        searchBinding.hint.visibility = View.GONE
                         factory?.update(it.coinList)
                     }
                 }
         }
 
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu, menu)
+        val searchItem = menu.findItem(R.id.search)
+        val searchView = searchItem.actionView as SearchView
+        searchView.queryHint = "Search"
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (query != null) {
+                    searchViewModel.getGalleryIds(query)
+                    searchBinding.progressBar.visibility = View.VISIBLE
+                    searchView.clearFocus()
+
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+        })
     }
 
     private fun initRecyclerview() {

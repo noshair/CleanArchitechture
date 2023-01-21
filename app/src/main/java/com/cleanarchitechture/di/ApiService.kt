@@ -7,13 +7,17 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
-    @GET("/public/collection/v1/search?")
+    @GET(SEARCH)
     suspend fun getSearchData(
         @Query("q") art: String,
         @Query("hasImages") hasImages: Boolean = true
     ): SearchResponse
 
-    @GET("/public/collection/v1/objects/{objectID}")
+    @GET(SEARCHITEM)
     suspend fun getGalleryItem(@Path("objectID") id: Int): SearchDetailResponse
 
+    companion object {
+        const val SEARCH = "/public/collection/v1/search?"
+        const val SEARCHITEM = "/public/collection/v1/objects/{objectID}"
+    }
 }

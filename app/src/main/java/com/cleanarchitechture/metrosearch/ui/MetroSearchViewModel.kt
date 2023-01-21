@@ -15,11 +15,9 @@ constructor(private val getAllidsUseCase: GetAllIdsUseCase) : ViewModel() {
     private var searchMutableList = MutableStateFlow(SearchUi())
 
     val searchList = searchMutableList.asStateFlow()
-    init {
-        getGalleryIds()
-    }
-    private fun getGalleryIds(){
-        getAllidsUseCase("art").onEach {item->
+
+    fun getGalleryIds(category: String) {
+        getAllidsUseCase(category).onEach { item ->
             when (item) {
                 is Resource.OnLoading -> {
                     searchMutableList.update {
