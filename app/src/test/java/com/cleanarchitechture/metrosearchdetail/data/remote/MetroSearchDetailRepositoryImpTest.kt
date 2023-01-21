@@ -26,10 +26,8 @@ class MetroSearchDetailRepositoryImpTest {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Mock
-    lateinit var metroSearchDetailRepositoryImp: MetroSearchDetailRepositoryImp
-
-    @Mock
     lateinit var apiService: ApiService
+
     private val testDispatcher = StandardTestDispatcher()
 
     @Before
@@ -117,7 +115,6 @@ class MetroSearchDetailRepositoryImpTest {
                     "Celestial dancer (Devata)"
                 )
             )
-
 
             val sut = MetroSearchDetailRepositoryImp(
                 apiService
