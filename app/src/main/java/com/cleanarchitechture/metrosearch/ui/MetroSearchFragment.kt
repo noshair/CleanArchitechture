@@ -47,7 +47,7 @@ class MetroSearchFragment : Fragment(), SearchAdapter.SearchItemClickListener {
                         searchBinding.progressBar.visibility = View.VISIBLE
                         searchBinding.hint.visibility = View.GONE
                         searchBinding.recyclerList.visibility = View.GONE
-                    } else if (it.error.isNotBlank()) {
+                    } else if (it.error.isNotEmpty()) {
                         searchBinding.progressBar.visibility = View.GONE
                         searchBinding.recyclerList.visibility = View.GONE
                         searchBinding.hint.visibility = View.GONE
