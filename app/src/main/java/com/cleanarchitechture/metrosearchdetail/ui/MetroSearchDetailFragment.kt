@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -23,9 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MetroSearchDetailFragment : Fragment() {
     private lateinit var binding: FragmentMetroSearchDetailBinding
     private var factory: SearchDetailAdapter? = null
-    private val searchViewModel: MetroSearchDetailViewModel by lazy {
-        ViewModelProvider(this)[MetroSearchDetailViewModel::class.java]
-    }
+    private val searchViewModel: MetroSearchDetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -7,8 +7,8 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
@@ -24,9 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MetroSearchFragment : Fragment(), SearchAdapter.SearchItemClickListener {
     private lateinit var searchBinding: FragmentMetroSearchBinding
     private var factory: SearchAdapter? = null
-    private val searchViewModel: MetroSearchViewModel by lazy {
-        ViewModelProvider(this)[MetroSearchViewModel::class.java]
-    }
+    private val searchViewModel: MetroSearchViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
