@@ -41,7 +41,6 @@ class MetroSearchViewModel @Inject constructor(private val getAllidsUseCase: Get
                         )
                     }
                 }
-                else -> {}
             }
         }.launchIn(viewModelScope)
     }

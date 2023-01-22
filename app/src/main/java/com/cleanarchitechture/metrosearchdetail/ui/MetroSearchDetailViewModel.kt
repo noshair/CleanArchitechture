@@ -52,7 +52,6 @@ class MetroSearchDetailViewModel
                             )
                         }
                     }
-                    else -> {}
                 }
             }
         }
