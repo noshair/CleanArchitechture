@@ -6,6 +6,7 @@ import com.cleanarchitechture.extension.Resource
 import com.cleanarchitechture.metrosearchdetail.domain.model.DetailUiState
 import com.cleanarchitechture.metrosearchdetail.domain.use_case.GetSelectedIItemUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -19,27 +20,33 @@ class MetroSearchDetailViewModel
     private val searchDetailMutable = MutableStateFlow(DetailUiState())
 
     val searchDetailItem = searchDetailMutable.asStateFlow()
+    private var fetchJob: Job? = null
 
     //work  on
     fun getSelectedItem(id: Int) {
-        viewModelScope.launch {
+        fetchJob?.cancel()
+        fetchJob = viewModelScope.launch {
             getSelectedIItemUseCase(id).collect { item ->
                 when (item) {
                     is Resource.OnLoading -> {
                         searchDetailMutable.update {
-                            DetailUiState(isLoading = true, null)
+                            it.copy(isLoading = true)
                         }
                     }
                     is Resource.OnSuccess -> {
-                        searchDetailMutable.update { DetailUiState(isLoading = false) }
+                        searchDetailMutable.update {
+                            it.copy(isLoading = false)
+                        }
                         searchDetailMutable.update {
                             DetailUiState(ItemList = item.data)
                         }
                     }
                     is Resource.OnFailure -> {
-                        searchDetailMutable.update { DetailUiState(isLoading = false) }
                         searchDetailMutable.update {
-                            DetailUiState(
+                            it.copy(isLoading = false)
+                        }
+                        searchDetailMutable.update {
+                            it.copy(
                                 error = item.error ?: "unexpected error occurred",
                                 isLoading = false
                             )
