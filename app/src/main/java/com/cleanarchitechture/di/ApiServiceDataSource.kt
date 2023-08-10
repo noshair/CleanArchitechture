@@ -20,9 +20,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class ApiServiceDataSource {
 
-
-    //OkhttpClient for building http request url
-
     private val client = OkHttpClient().newBuilder()
         .connectTimeout(120, TimeUnit.SECONDS)
         .readTimeout(120, TimeUnit.SECONDS)

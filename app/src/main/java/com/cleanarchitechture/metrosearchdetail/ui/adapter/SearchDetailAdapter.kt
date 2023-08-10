@@ -1,19 +1,11 @@
 package com.cleanarchitechture.metrosearchdetail.ui.adapter
 
-import android.content.Context
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.cleanarchitechture.R
-import com.cleanarchitechture.databinding.SearchDetailItemBinding
-
+/*
 class SearchDetailAdapter(val context: Context) :
     RecyclerView.Adapter<SearchDetailAdapter.SearchViewHolder>() {
 
     // data
-    private lateinit var recyclerViewList: List<String>
+        private lateinit var binding: SearchDetailItemBinding
 
 
     inner class SearchViewHolder(private var searchDetailItemBinding: SearchDetailItemBinding) :
@@ -31,12 +23,9 @@ class SearchDetailAdapter(val context: Context) :
         parent: ViewGroup,
         viewType: Int
     ): SearchViewHolder {
-        val view: SearchDetailItemBinding =
-            DataBindingUtil.inflate(
-                LayoutInflater.from(parent.context),
-                R.layout.search_detail_item, parent, false
-            )
-        return SearchViewHolder(view)
+        binding =
+            SearchDetailItemBinding.inflate(LayoutInflater.from(parent.context),parent, false)
+        return SearchViewHolder(binding)
 
 
     }
@@ -60,3 +49,4 @@ class SearchDetailAdapter(val context: Context) :
         notifyDataSetChanged()
     }
 }
+*/

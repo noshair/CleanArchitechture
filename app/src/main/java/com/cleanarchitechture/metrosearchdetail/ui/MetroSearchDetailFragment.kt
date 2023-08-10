@@ -1,28 +1,31 @@
 package com.cleanarchitechture.metrosearchdetail.ui
 
+//import com.cleanarchitechture.metrosearchdetail.ui.adapter.SearchDetailAdapter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.cleanarchitechture.R
 import com.cleanarchitechture.databinding.FragmentMetroSearchDetailBinding
-import com.cleanarchitechture.metrosearchdetail.ui.adapter.SearchDetailAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MetroSearchDetailFragment : Fragment() {
-    private lateinit var binding: FragmentMetroSearchDetailBinding
-    private var factory: SearchDetailAdapter? = null
+    private var _binding: FragmentMetroSearchDetailBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
+    //private var factory: SearchDetailAdapter? = null
     private val searchViewModel: MetroSearchDetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,15 +37,15 @@ class MetroSearchDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(
-            inflater, R.layout.fragment_metro_search_detail, container, false
+        _binding = FragmentMetroSearchDetailBinding.inflate(
+            inflater, container, false
         )
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        initRecyclerview()
-        lifecycleScope.launchWhenStarted {
+        // initRecyclerview()
+        lifecycleScope.launch {
             searchViewModel.searchDetailItem.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .collect {
                     if (it.isLoading) {
@@ -67,26 +70,30 @@ class MetroSearchDetailFragment : Fragment() {
                             R.string.department,
                             it.ItemList.department
                         ) ?: ""
-                        factory?.update(it.ItemList.additionalImages)
+                        //factory?.update(it.ItemList.additionalImages)
                     }
                 }
         }
 
     }
 
-    private fun initRecyclerview() {
-        binding.recyclerDetailList.apply {
-            layoutManager = LinearLayoutManager(context)
-            this.layoutManager = LinearLayoutManager(
-                requireContext(), LinearLayoutManager.HORIZONTAL, false
-            )
-            factory = SearchDetailAdapter(context)
-            this.addItemDecoration(
-                DividerItemDecoration(
-                    context, DividerItemDecoration.VERTICAL
-                )
-            )
-            adapter = factory
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
+    /*   private fun initRecyclerview() {
+           binding.recyclerDetailList.apply {
+               layoutManager = LinearLayoutManager(context)
+               this.layoutManager = LinearLayoutManager(
+                   requireContext(), LinearLayoutManager.HORIZONTAL, false
+               )
+               factory = SearchDetailAdapter(context)
+               this.addItemDecoration(
+                   DividerItemDecoration(
+                       context, DividerItemDecoration.VERTICAL
+                   )
+               )
+               adapter = factory
+           }
+       }*/
 }

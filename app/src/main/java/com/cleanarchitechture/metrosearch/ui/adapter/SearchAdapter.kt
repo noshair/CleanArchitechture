@@ -1,28 +1,30 @@
 package com.cleanarchitechture.metrosearch.ui.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.cleanarchitechture.R
 import com.cleanarchitechture.databinding.SearchItemBinding
 
 
 class SearchAdapter(
     private val itemClickListener: SearchItemClickListener
 ) :
-    RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
+    RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
 
     // data
-    private lateinit var recyclerViewList: List<Int>
+    private lateinit var binding: SearchItemBinding
 
-    inner class SearchViewHolder(private var searchItemBinding: SearchItemBinding) :
-        RecyclerView.ViewHolder(searchItemBinding.root) {
-        fun bind(item: Int) {
-            searchItemBinding.textId.text = item.toString()
-
+    inner class ViewHolder(private var item: SearchItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun setData(item: Int) {
+            binding.apply {
+                this.textId.text = item.toString()
+                // tvName.text = item.name
+            }
         }
+
     }
 
 
@@ -33,36 +35,32 @@ class SearchAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): SearchViewHolder {
-        val view: SearchItemBinding =
-            DataBindingUtil.inflate(
-                LayoutInflater.from(parent.context),
-                R.layout.search_item, parent, false
-            )
-        return SearchViewHolder(view)
+    ): SearchAdapter.ViewHolder {
+        binding = SearchItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.setData(differ.currentList[position])
+        holder.setIsRecyclable(false)
     }
 
 
-    override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
-        holder.bind(recyclerViewList[position])
+    override fun getItemCount() = differ.currentList.size
 
-          holder.itemView.setOnClickListener {
-              itemClickListener.itemClicked(recyclerViewList[position])
-          }
-    }
-
-
-    override fun getItemCount(): Int {
-        if (::recyclerViewList.isInitialized) {
-            return recyclerViewList.size
-        }
-        return 0
-    }
 
     // reloadData()
-    fun update(users: List<Int>) {
-        recyclerViewList = kotlin.collections.ArrayList(users)
-        notifyDataSetChanged()
+    private val differCallback = object : DiffUtil.ItemCallback<Int>() {
+        override fun areItemsTheSame(oldItem: Int, newItem: Int): Boolean {
+            return oldItem == newItem
+        }
+
+        override fun areContentsTheSame(oldItem: Int, newItem: Int): Boolean {
+            return oldItem == newItem
+        }
+
     }
+
+    val differ = AsyncListDiffer(this, differCallback)
 
 }

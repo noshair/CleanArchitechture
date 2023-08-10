@@ -5,7 +5,6 @@ import android.view.*
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.core.os.bundleOf
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -18,20 +17,21 @@ import com.cleanarchitechture.R
 import com.cleanarchitechture.databinding.FragmentMetroSearchBinding
 import com.cleanarchitechture.metrosearch.ui.adapter.SearchAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
 class MetroSearchFragment : Fragment(), SearchAdapter.SearchItemClickListener {
     private lateinit var searchBinding: FragmentMetroSearchBinding
-    private var factory: SearchAdapter? = null
+    private val factory by lazy { SearchAdapter(this) }
     private val searchViewModel: MetroSearchViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        searchBinding = DataBindingUtil.inflate(
-            inflater, R.layout.fragment_metro_search, container, false
+        searchBinding = FragmentMetroSearchBinding.inflate(
+            inflater, container, false
         )
         return searchBinding.root
     }
@@ -40,7 +40,7 @@ class MetroSearchFragment : Fragment(), SearchAdapter.SearchItemClickListener {
         initRecyclerview()
         setHasOptionsMenu(true)
         super.onViewCreated(view, savedInstanceState)
-        lifecycleScope.launchWhenStarted {
+        lifecycleScope.launch {
             searchViewModel.searchList.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .collect {
                     if (it.isLoading && it.coinList.isEmpty()) {
@@ -56,7 +56,7 @@ class MetroSearchFragment : Fragment(), SearchAdapter.SearchItemClickListener {
                         searchBinding.recyclerList.visibility = View.VISIBLE
                         searchBinding.progressBar.visibility = View.GONE
                         searchBinding.hint.visibility = View.GONE
-                        factory?.update(it.coinList)
+                        factory.differ.submitList(it.coinList)
                     }
                 }
         }
@@ -92,7 +92,6 @@ class MetroSearchFragment : Fragment(), SearchAdapter.SearchItemClickListener {
             this.layoutManager = LinearLayoutManager(
                 requireContext(), LinearLayoutManager.VERTICAL, false
             )
-            factory = SearchAdapter(this@MetroSearchFragment)
             this.addItemDecoration(
                 DividerItemDecoration(
                     context, DividerItemDecoration.VERTICAL
